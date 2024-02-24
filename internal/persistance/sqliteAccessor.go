@@ -18,6 +18,10 @@ func NewSquliteAccessor(dbName string) *sqliteAccessor {
         panic("couldn't initializate the DB")
     }
 
+    db.AutoMigrate(&model.User{})
+    db.AutoMigrate(&model.BankAccount{})
+    db.AutoMigrate(&model.Goal{})
+    db.AutoMigrate(&model.Tag{})
     db.AutoMigrate(&model.Transaction{})
 
     return &sqliteAccessor{

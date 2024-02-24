@@ -10,4 +10,6 @@ type Transaction struct {
 	Date time.Time
 	Description string
 	Value float64
+    BankAccountId uint
+    TagId uint
 }
