@@ -1,0 +1,22 @@
+@startuml
+ ' hide the spot
+ hide circle
+
+ ' avoid problems with angled crows feet
+ skinparam linetype ortho
+
+ together { 
+  class Goal
+  class User
+  class BankAccount
+ }
+ class Transaction
+ class Tag
+
+ User }o--|| BankAccount
+ User }o--|| Goal
+ User }o--|| Tag
+ BankAccount }o--|| Transaction
+ BankAccount ||--o{ Goal
+ Transaction ||--o{ Tag
+@enduml
