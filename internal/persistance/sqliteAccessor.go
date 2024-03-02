@@ -3,39 +3,50 @@ package persistance
 import (
 	"fmt"
 	"kevin/internal/model"
+	"sync"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type sqliteAccessor struct {
-    db *gorm.DB
+	db *gorm.DB
 }
 
-func NewSquliteAccessor(dbName string) *sqliteAccessor {
-    db, err := gorm.Open(sqlite.Open(dbName), &gorm.Config{})
-    if err != nil {
-        panic("couldn't initializate the DB")
-    }
+// instancia singleton
+var instance *sqliteAccessor
 
-    db.AutoMigrate(&model.User{})
-    db.AutoMigrate(&model.BankAccount{})
-    db.AutoMigrate(&model.Goal{})
-    db.AutoMigrate(&model.Tag{})
-    db.AutoMigrate(&model.Transaction{})
+// é usado para garantir que so vai ser executado uma vez
+var once sync.Once
 
-    return &sqliteAccessor{
-        db: db,
-    }
+func SqliteAccessorInstance(dbName string) *sqliteAccessor {
+	once.Do(func() {
+		db, err := gorm.Open(sqlite.Open(dbName), &gorm.Config{})
+		if err != nil {
+			panic("couldn't initializate the DB")
+		}
+
+		db.AutoMigrate(&model.User{})
+		db.AutoMigrate(&model.BankAccount{})
+		db.AutoMigrate(&model.Goal{})
+		db.AutoMigrate(&model.Tag{})
+		db.AutoMigrate(&model.Transaction{})
+
+		instance = &sqliteAccessor{
+			db: db,
+		}
+	})
+
+	return instance
 }
 
 func (accessor sqliteAccessor) Insert(transaction *model.Transaction) {
-    accessor.db.Create(transaction)
+	accessor.db.Create(transaction)
 }
 
 func (accessor sqliteAccessor) SelectAllTransactions() []model.Transaction {
-    var transactions []model.Transaction
-    result := accessor.db.Find(&transactions)
-    fmt.Println("found: ", result.RowsAffected)
-    return transactions
- }
+	var transactions []model.Transaction
+	result := accessor.db.Find(&transactions)
+	fmt.Println("found: ", result.RowsAffected)
+	return transactions
+}
