@@ -14,12 +14,12 @@ type sqliteAccessor struct {
 }
 
 // instancia singleton
-var instance *sqliteAccessor
+var instance DbAccessor
 
 // é usado para garantir que so vai ser executado uma vez
 var once sync.Once
 
-func SqliteAccessorInstance(dbName string) *sqliteAccessor {
+func SqliteAccessorInstance(dbName string) DbAccessor {
 	once.Do(func() {
 		db, err := gorm.Open(sqlite.Open(dbName), &gorm.Config{})
 		if err != nil {
@@ -41,7 +41,7 @@ func SqliteAccessorInstance(dbName string) *sqliteAccessor {
 }
 
 func (accessor sqliteAccessor) Insert(transaction *model.Transaction) {
-	accessor.db.Create(transaction)
+	accessor.db.Create(transaction) // TODO: how to deal with errors using gorm?
 }
 
 func (accessor sqliteAccessor) SelectAllTransactions() []model.Transaction {
