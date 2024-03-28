@@ -1,14 +1,12 @@
 package model
 
 import (
-    "gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
 type BankAccount struct {
-    gorm.Model
-    Name string
-    UserId uint
-    Transactions []Transaction
+	gorm.Model
+	Name         string
+	UserId       uint
+	Transactions []Transaction
 }
-
-

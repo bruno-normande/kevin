@@ -41,7 +41,11 @@ func SqliteAccessorInstance(dbName string) DbAccessor {
 }
 
 func (accessor sqliteAccessor) Insert(transaction *model.Transaction) {
-	accessor.db.Create(transaction) // TODO: how to deal with errors using gorm?
+	accessor.db.Save(transaction) // TODO: how to deal with errors using gorm?
+}
+
+func (accessor sqliteAccessor) SaveBankAccount(bankAccount *model.BankAccount) {
+	accessor.db.Save(bankAccount)
 }
 
 func (accessor sqliteAccessor) SelectAllTransactions() []model.Transaction {

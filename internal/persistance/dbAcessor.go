@@ -6,5 +6,6 @@ import (
 
 type DbAccessor interface {
 	Insert(transaction *model.Transaction)
+	SaveBankAccount(bankAccount *model.BankAccount)
 	SelectAllTransactions() []model.Transaction
 }
